@@ -17,6 +17,7 @@
   export let crossOrigin: HTMLImgAttributes['crossorigin'] = null
   export let restrictPosition = true
   export let tabindex: number | undefined = undefined
+  export let initialCroppedAreaPercentages = null;
 
   let cropperSize: Size | null = null
   let imageSize: ImageSize = { width: 0, height: 0, naturalWidth: 0, naturalHeight: 0 }
@@ -63,9 +64,13 @@
   }
 
   const onImgLoad = () => {
-    computeSizes()
-    emitCropData()
-  }
+    computeSizes();
+    if (initialCroppedAreaPercentages) {
+      const { x, y } = helpers.getInitialCropPosition(initialCroppedAreaPercentages, imageSize, cropperSize, zoom);
+      crop = { x, y };
+    }
+    emitCropData();
+  };
 
   const getAspect = () => {
     if (cropSize) {
